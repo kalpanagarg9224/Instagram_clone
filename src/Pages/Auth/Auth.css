@@ -1,0 +1,50 @@
+/* .mobileWallpaper{
+    background-image: url();
+    animation: changeBg 8s infinite;
+}
+
+@keyframes changeBg{
+    0%{
+        background-image: url();
+    }
+    25%{
+        background-image: url();
+    }
+    50%{
+        background-image: url();
+    }
+    75%{
+        background-image: url();
+    }
+} */
+
+.mobileWallpaper{
+  height: 28rem;
+  width: 14.7rem;
+
+  top: 3.7rem;      /* adjust if needed */
+  left: 12.5rem;   /* centers to middle phone */
+
+  border-radius: 1.8rem;
+
+  background-size: cover;
+  background-position: center;
+
+  animation: changeBg 8s infinite;
+}
+
+/* Background animation */
+@keyframes changeBg {
+  0% {
+    background-image: url("./reel1.png");
+  }
+  25% {
+    background-image: url("./reel2.png");
+  }
+  50% {
+    background-image: url("./reel3.png");
+  }
+  75% {
+    background-image: url("./reel4.png");
+  }
+}

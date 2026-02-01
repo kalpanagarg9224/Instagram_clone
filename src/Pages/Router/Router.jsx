@@ -1,13 +1,16 @@
 import React from 'react';
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useLocation} from "react-router-dom";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import Homepage from "../HomePage/HomePage";
 import Profile from "../Profile/Profile";
 import Story from '../Story/Story';
+import {Auth} from '../Auth/Auth';
 
 const Router = () => {
+    const location = useLocation();
     return(
         <div>
+         {(location.pathname !=="/login" && location.pathname !=="/signup") &&(
             <div className='flex'>
                 <div className='w=[20%] border border-l-slate-500'>
                     <Sidebar/>
@@ -20,6 +23,14 @@ const Router = () => {
                     </Routes>
                 </div>
             </div>
+         )}
+         {( location.pathname === "/login" || location.pathname ==="/signup") && (
+            <div>
+                <Routes>
+                    <Route path='/signup' element={<Auth/>}></Route>
+                    <Route path='/login' element={<Auth/>}></Route>
+                </Routes>
+            </div>)}
         </div>
     );
 };
