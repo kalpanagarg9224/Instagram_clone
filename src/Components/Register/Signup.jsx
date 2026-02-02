@@ -1,8 +1,11 @@
-import { Box, Button, FormControl, FormErrorMessage, Input } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormErrorMessage, Input, useToast } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import React from "react";
+import React, { useEffect }  from "react";
 import { useNavigate } from "react-router-dom";
+import { signupAction } from "../../Redux/Auth/Action";
+import { useDispatch, useSelector } from "react-redux";
+
 
 
 const validationschema = Yup.object().shape({
@@ -13,10 +16,30 @@ const validationschema = Yup.object().shape({
 const Signup = () =>{
     const initialValues={email:"",username:"", name:"", password:""} 
     const navigate = useNavigate();
-    const handleSubmit=(values)=>{
-        console.log("values: ", values);
-    }
+    const dispatch=useDispatch();
+    const {auth} = useSelector((store)=>store);
+    const toast = useToast();
+
+    console.log("store signup : ",auth.signup);
     const handleNavigate=()=>navigate("/login");
+    const handleSubmit = (values,actions)=>{
+        console.log("values: ",values);
+        dispatch(signupAction(values));
+        actions.setSubmitting(false);
+
+    };
+
+    useEffect(()=>{
+        if(auth.signup?.username){
+        navigate("/login")
+        toast({
+            title: `Account created. ${auth.signup?.username}`,
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+        }
+    },[auth.signup,navigate, toast])
 
     return (
         <div> 
@@ -34,9 +57,9 @@ const Signup = () =>{
                                         }
                                     </Field>
 
-                                    <Field name="usename">
+                                    <Field name="username">
                                         {({field,form})=> <FormControl isInvalid={form.errors.username && form.touched.username}>
-                                            <Input className="w-full" {...field} id="usename" placeholder="username">
+                                            <Input className="w-full" {...field} id="username" placeholder="username">
                                             </Input>
                                             <FormErrorMessage>{form.errors.username}</FormErrorMessage>
                                         </FormControl>
