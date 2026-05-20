@@ -17,6 +17,7 @@ try {
     })
 
     const post = await res.json()
+    console.log("created post ",post);
     dispatch({type:CREATE_NEW_POST , payload:post});
 } catch (error) {
     console.log("catch: ",error)
@@ -40,11 +41,12 @@ try {
 } catch (error) {
     console.log("catch: ",error)
 }
+console.log("UserIds sent to API:", data.userIds);
 }
 
-export const reqserPostAction=(data)=>async(dispatch)=>{
+export const reqUserPostAction=(data)=>async(dispatch)=>{
 try {
-
+    console.log("sending userId:", data.userId);
     const res= await fetch(`${BASE_API}/posts/following/${data.userId}`,{
         method:"GET",
         headers:{
@@ -54,30 +56,54 @@ try {
     })
 
     const posts = await res.json()
+    console.log("response:", posts);
     console.log("Req user post ",posts);
-    dispatch({type:REQ_USER_POST , payload:posts});
+    dispatch({type:GET_USER_POST , payload:posts});
 } catch (error) {
     console.log("catch: ",error)
 }
 }
 
-export const likePostAction=(data)=>async(dispatch)=>{
-try {
+// export const likePostAction=(data)=>async(dispatch)=>{
+// try {
 
-    const res= await fetch(`${BASE_API}/posts/like/${data.postId}`,{
-        method:"PUT",
-        headers:{
-            "content-Type":"application/json",
-            Authorization: "Bearer " + data.jwt
-        },
-    })
+//     const res= await fetch(`${BASE_API}/posts/like/${data.postId}`,{
+//         method:"PUT",
+//         headers:{
+//             "content-Type":"application/json",
+//             Authorization: "Bearer " + data.jwt
+//         },
+//     })
 
-    const post = await res.json()
-    console.log("liked post ",post);
-    dispatch({type:LIKE_POST , payload:post});
-} catch (error) {
-    console.log("catch: ",error)
-}
+//     const post = await res.json()
+//     console.log("liked post ",post);
+//     dispatch({type:LIKE_POST , payload:post});
+// } catch (error) {
+//     console.log("catch: ",error)
+// }
+// }
+export const likePostAction = (data) => async (dispatch) => {
+    try {
+
+        const res = await fetch(`${BASE_API}/posts/like/${data.postId}`, {
+            method: "PUT",
+            headers: {
+                "content-Type": "application/json",
+                Authorization: "Bearer " + data.jwt
+            },
+        });
+
+        const post = await res.json();
+
+        // 🔥 ADD THESE LOGS
+        console.log("FULL liked post response:", post);
+        console.log("likedByUsers after like:", post.likedByUsers);
+
+        dispatch({ type: LIKE_POST, payload: post });
+
+    } catch (error) {
+        console.log("catch: ", error)
+    }
 }
 
 export const unlikePostAction=(data)=>async(dispatch)=>{
@@ -119,7 +145,7 @@ try {
 export const unsavePostAction=(data)=>async(dispatch)=>{
 try {
 
-    const res= await fetch(`${BASE_API}/posts/Unsave_post/${data.postId}`,{
+    const res= await fetch(`${BASE_API}/posts/unsave_post/${data.postId}`,{
         method:"PUT",
         headers:{
             "content-Type":"application/json",
@@ -146,7 +172,7 @@ try {
     })
 
     const post = await res.json()
-    console.log("get single post ",post);
+    // console.log("get single post ",post);
     dispatch({type:GET_SINGLE_POST , payload:post});
 } catch (error) {
     console.log("catch: ",error)

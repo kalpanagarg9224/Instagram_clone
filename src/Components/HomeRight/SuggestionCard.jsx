@@ -1,18 +1,61 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import {followUserAction, unFollowUserAction} from '../../Redux/User/Action';
+import defaultImage from "../../Images/userAvatar.png";
 
-const SuggestionCard = () => {
-  return (
-    <div className='flex justify-between item-center'>
-        <di className='flex item-center'v>
-            <img className='w-9 h-9 rounded-full' src='https://cdn.pixabay.com/photo/2018/07/12/11/46/spider-3533177_1280.jpg'/>
-            <div className='ml-2'>
-              <p className='text-sm font-semibold'>username</p>
-              <p className='text-sm font-semibold opacity-70'>Follows you</p>
+
+const SuggestionCard = ({ user }) => {
+    const dispatch = useDispatch();
+    const token = localStorage.getItem("token");
+const reqUserState = useSelector(store => store.user);
+    const reqUser = reqUserState.reqUser;
+    const isFollowed = reqUser?.following?.some(
+        (item) => item.id === user.id
+    );
+    const handleToggleFollow = () => {
+        if(isFollowed){
+            dispatch(
+                unFollowUserAction({
+                    jwt: token,
+                    userId: user.id
+                })
+            );
+        }
+        else{
+            dispatch(
+                followUserAction({
+                    jwt: token,
+                    userId: user.id
+                })
+            );
+        }
+    }
+
+    return (
+        <div className='flex justify-between items-center'>
+            <div className='flex items-center'>
+                <img
+                    className='w-9 h-9 rounded-full'
+                    src={user?.image || defaultImage }
+                    alt=''
+                />
+                <div className='ml-2'>
+                    <p className='text-sm font-semibold'>
+                        {user?.username}
+                    </p>
+                    <p className='text-sm opacity-70'>
+                        {user?.name}
+                    </p>
+                </div>
             </div>
-        </di>
-        <p className='text-blue-700 text-sm font-semibold'>Follow</p>
-    </div>
-  )
+            <button
+                onClick={handleToggleFollow}
+                className='text-blue-700 text-sm font-semibold'
+            >
+                {isFollowed ? "Unfollow" : "Follow"}
+            </button>
+        </div>
+    )
 }
 
-export default SuggestionCard
+export default SuggestionCard;

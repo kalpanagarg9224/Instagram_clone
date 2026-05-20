@@ -8,7 +8,7 @@ const initialValue={
     unlikedPost:null,
     savedPost:null,
     unsavedPost:null,
-    singlePost:null
+    singlePost:null,
 }
 
 export const PostReducer=(store=initialValue,{type,payload})=>{

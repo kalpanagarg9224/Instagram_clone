@@ -1,4 +1,4 @@
-import React, { act, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./ProgressBar.css"
 
 const ProgressBar = ({index, activeIndex, duration}) => {

@@ -1,4 +1,4 @@
-import { FOLLOW_USER, GET_USER_BY_USERNAME, GET_USERS_BY_USER_IDS, REQ_USER, SEARCH_USER, UNFOLLOW_USER, UPDATE_USER } from "./ActionType"
+import { FOLLOW_USER, GET_USER_BY_USERNAME, GET_USERS_BY_USER_IDS, REQ_USER, SEARCH_USER, UNFOLLOW_USER, UPDATE_USER, POPULAR_USER } from "./ActionType"
 
 const initialValue={
     reqUser:null,
@@ -6,8 +6,9 @@ const initialValue={
     findUserByIds:[],
     followUser:null,
     unfollowUser:null,
-    searchUser:null,
-    updatedUser:null
+    searchUser:[],
+    updatedUser:null,
+    popularUsers:[],
 }
 
 export const UserReducer=(store=initialValue,{type,payload})=>{
@@ -29,8 +30,18 @@ export const UserReducer=(store=initialValue,{type,payload})=>{
     else if(type===SEARCH_USER){
         return {...store, searchUser:payload}
     }
+    // 
     else if(type===UPDATE_USER){
-        return {...store, updatedUser:payload}
+    return {
+        ...store, updatedUser: payload,
+        reqUser: payload  
     }
+}
+
+else if(type===POPULAR_USER){
+    return {
+        ...store, popularUsers: payload
+    }
+}
     return store;
 }

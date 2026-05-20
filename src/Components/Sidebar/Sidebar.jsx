@@ -6,15 +6,19 @@ import { useDisclosure } from "@chakra-ui/react";
 
 import CreatePostModal from '../../Components/Post/CreatePostModal';
 import SearchComponents from '../SearchComponents/SearchComponents';
+import { useSelector } from 'react-redux';
 
 const Sidebar = () => {
     const [activeTab,setActiveTab]=useState("");
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const {user} = useSelector(store=>store)
+
+
     const handleTabClick=(title)=>{
         setActiveTab(title)
-        if(title==="Profile"){ navigate("/username");}
+        if(title==="Profile"){ navigate(`/${user.reqUser?.username}`);}
         else if(title==="Home"){navigate("/")}
         else if(title==="Create"){onOpen()}
         if(title==="Search"){
@@ -33,7 +37,7 @@ const Sidebar = () => {
                 </div>}
                 <div className='mt-10'>
                     {menu.map((item) => (
-                        <div onClick={()=>handleTabClick(item.title)} className='flex items-center mb-5 cursor-pointer text-lg'>
+                        <div  key={item.title} onClick={()=>handleTabClick(item.title)} className='flex items-center mb-5 cursor-pointer text-lg'>
                         {activeTab===item.title ? item.ActiveIcon : item.icon}
                          {activeTab !== "Search" && <p className={`${activeTab===item.title ? "font-bold" : "font-semibold"}`}>{item.title}</p>}
                     </div>))}
