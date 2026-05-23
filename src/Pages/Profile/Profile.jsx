@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ProfileUserDetails } from '../../Components/ProfileComponents/ProfileUserDetails';
+import ProfileUserDetails from "../../Components/ProfileComponents/ProfileUserDetails";
 import ReqUserPostPart from '../../Components/ProfileComponents/ReqUserPostPart';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
