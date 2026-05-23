@@ -9,7 +9,7 @@ const HomeRight = () => {
     const token = localStorage.getItem("token");
     const { user } = useSelector(store => store);
     useEffect(() => {
-        if(token){
+        if (token) {
             dispatch(getPopularUser(token));
         }
     }, []);
@@ -21,7 +21,7 @@ const HomeRight = () => {
                     <div className='flex item-center'>
                         <div>
                             <img
-                                className='w-12 h-12 rounded-full' src={user.reqUser?.image || defaultImage} alt=''/>
+                                className='w-12 h-12 rounded-full' src={user.reqUser?.image || defaultImage} alt='' />
                         </div>
                         <div className='ml-3'>
                             <p className='text-sm font-semibold'>{user.reqUser?.name}</p>
@@ -36,15 +36,19 @@ const HomeRight = () => {
                 </div>
 
                 <div className='space-y-5 mt-10'>{
-                        Array.isArray(user.popularUsers) &&
-                        user.popularUsers.map((item, index) => (
+                    Array.isArray(user.popularUsers) &&
+                    user.popularUsers
+                        .filter(
+                            (item) => item.id !== user.reqUser?.id
+                        )
+                        .map((item, index) => (
 
                             <SuggestionCard
                                 key={item.id || index}
                                 user={item}
                             />
                         ))
-                    }
+                }
                 </div>
 
             </div>
