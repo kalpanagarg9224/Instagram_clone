@@ -19,8 +19,15 @@ export const PostReducer=(store=initialValue,{type,payload})=>{
         return {...store, userPost:payload}
     }
     else if(type===DELETE_POST){
-        return {...store, deletedPost:payload}
+    return {
+        ...store,
+        deletedPost: payload,
+        userPost: store.userPost.filter(
+            (post) => post.id !== payload.id
+        )
     }
+
+}
     else if(type===LIKE_POST){
         return {...store, likedPost:payload}
     }

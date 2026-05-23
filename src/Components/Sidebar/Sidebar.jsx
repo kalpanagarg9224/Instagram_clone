@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IoReorderThree } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import { menu } from './Sidebarconfig';
 import { useDisclosure } from "@chakra-ui/react";
-
+import MoreDropdown from './MoreDropdown';
 import CreatePostModal from '../../Components/Post/CreatePostModal';
 import SearchComponents from '../SearchComponents/SearchComponents';
 import { useSelector } from 'react-redux';
@@ -14,7 +14,8 @@ const Sidebar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const {user} = useSelector(store=>store)
-
+    const [showMore, setShowMore] = useState(false);
+    const dropdownRef = useRef();
 
     const handleTabClick=(title)=>{
         setActiveTab(title)
@@ -26,6 +27,37 @@ const Sidebar = () => {
         }
         else setIsSearchVisible(false);
     };
+
+    useEffect(() => {
+
+    const handleClickOutside = (event) => {
+
+        if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target)
+        ) {
+
+            setShowMore(false);
+
+        }
+
+    };
+
+    document.addEventListener(
+        "mousedown",
+        handleClickOutside
+    );
+
+    return () => {
+
+        document.removeEventListener(
+            "mousedown",
+            handleClickOutside
+        );
+
+    };
+
+}, []);
 
 
     return(
@@ -43,10 +75,26 @@ const Sidebar = () => {
                     </div>))}
                 </div>
                 </div>
-                <div className='flex items-center cursor-pointer pb-10'>
-                <IoReorderThree className='text-2xl'/>
-                {activeTab !== "Search" && <p className='ml-5'>More</p>}
-            </div>
+                <div className='relative pb-10' ref={dropdownRef}>
+
+    <div
+        onClick={() => setShowMore(!showMore)}
+        className='flex items-center cursor-pointer'
+    >
+
+        <IoReorderThree className='text-2xl'/>
+
+        {activeTab !== "Search" && (
+            <p className='ml-5'>
+                More
+            </p>
+        )}
+
+    </div>
+
+    <MoreDropdown show={showMore}/>
+
+</div>
             </div>
             <CreatePostModal onClose={onClose} isOpen={isOpen}/>
             {isSearchVisible && <SearchComponents/>}

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { likePostAction, savePostAction, unlikePostAction, unsavePostAction } from '../../Redux/Post/Action';
 import { isPostLikedByUser, isSavedPost } from '../../Config/Logic';
 import { useNavigate } from 'react-router-dom';
+import { deletePostAction } from '../../Redux/Post/Action';
 
 const PostCard = ({post}) => {
     const [showDropDown, setShowDropDown] = useState(false);
@@ -44,6 +45,13 @@ const PostCard = ({post}) => {
     const handleClick=()=>{
         setShowDropDown(!showDropDown);
     }
+    const handleDeletePost = () => {
+    const data = {
+        jwt: token,
+        postId: post.id
+    };
+    dispatch(deletePostAction(data));
+};
     const handleOpenCommentModal = () => {
     navigate(`/comment/${post.id}`);
     onOpen();
@@ -69,8 +77,20 @@ const PostCard = ({post}) => {
                 <div className='dropdown'>
                     <BsThreeDots className='dots' onClick={handleClick}/>
                     <div className='dropdown-content'>
-                        {showDropDown && <p className='bg-black text-white py-1 px-4 rounded-md cursor-pointer'>Delete</p>}
-                    </div>
+
+    {showDropDown &&
+        post?.user?.id === user?.reqUser?.id && (
+
+        <p
+            onClick={handleDeletePost}
+            className='bg-black text-white py-1 px-4 rounded-md cursor-pointer hover:bg-red-600'
+        >
+            Delete
+        </p>
+
+    )}
+
+</div>
                 </div>
             </div>
             <div className='w-full'>
