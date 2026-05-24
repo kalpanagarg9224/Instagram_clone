@@ -1,225 +1,270 @@
-import {
-    Button,
-    Checkbox,
-    FormControl,
-    FormHelperText,
-    FormLabel,
-    Input,
-    Stack,
-    Textarea,
-    useDisclosure,
-} from "@chakra-ui/react";
-import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useToast } from "@chakra-ui/react";
-import { getUserProfileAction, updateUserAction } from "../../Redux/User/Action";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+import { useToast, useDisclosure } from "@chakra-ui/react";
+
+import {
+  getUserProfileAction,
+  updateUserAction,
+} from "../../Redux/User/Action";
+
 import { uploadToCloudinary } from "../../Config/UploadToCloudinary";
 import ChangeProfilePhotoModal from "./ChangeProfilePhotoModal";
 
 const EditAccount = () => {
-    const { user } = useSelector((store) => store);
-    const toast = useToast();
-    const dispatch = useDispatch();
-    const token = localStorage.getItem("token");
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const [imageFile, setImageFile] = useState(null);
-    const [initialValues, setInitialValues] = useState({
-        name: "",
-        username: "",
-        email: "",
-        bio: "",
-        mobile: "",
-        gender: "",
-        website: "",
-        private: false,
-    });
-    useEffect(() => {
-        dispatch(getUserProfileAction(token))
-    }, [token]);
-    useEffect(() => {
-        console.log("reqUser", user.reqUser);
-        const newValue = {};
-        for (let item in initialValues) {
-            if (user.reqUser && user.reqUser[item]) {
-                newValue[item] = user.reqUser[item];
-            }
-        }
-        console.log("new value -: ", newValue);
-        formik.setValues(newValue);
-    }, [user.reqUser]);
+  const { user } = useSelector((store) => store);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const toast = useToast();
+  const token = localStorage.getItem("token");
 
-    const formik = useFormik({
-        initialValues: { ...initialValues },
-        onSubmit: (values) => {
-            const data = {
-                jwt: token,
-                data: { ...values, id: user.reqUser?.id },
-            };
-            dispatch(updateUserAction(data));
-            toast({
-                title: "Account updated...",
-                status: "success",
-                duration: 5000,
-                isclosable: true,
-            });
-        },
-    });
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [imageFile, setImageFile] = useState(null);
 
-    async function handleProfileImageChange(event) {
-        const selectedFile = event.target.files[0];
-        if (selectedFile) {
-            const image = await uploadToCloudinary(selectedFile);
-            setImageFile(image)
-            const data = {
-                jwt: token,
-                data: { image, id: user.reqUser?.id },
-            };
-            dispatch(updateUserAction(data))
-        }
-        // dispatch(getUserProfileAction(token))
-        onClose();
+  const userId = user?.reqUser?.id;
+
+  const initialValues = {
+    name: "",
+    username: "",
+    email: "",
+    bio: "",
+    mobile: "",
+    countryCode: "+91",
+    gender: "",
+    website: "",
+    private: false,
+  };
+
+  useEffect(() => {
+    dispatch(getUserProfileAction(token));
+  }, []);
+
+  const formik = useFormik({
+    initialValues,
+    enableReinitialize: true,
+
+    onSubmit: async (values) => {
+      await dispatch(
+        updateUserAction({
+          jwt: token,
+          data: { ...values, id: userId },
+        })
+      );
+
+      toast({
+        title: "Profile updated ✨",
+        status: "success",
+        duration: 1500,
+        isClosable: true,
+      });
+
+      navigate(`/${formik.values.username}`);
+    },
+  });
+
+  useEffect(() => {
+    if (user.reqUser) {
+      const updated = {};
+      Object.keys(initialValues).forEach((key) => {
+        updated[key] = user.reqUser[key] ?? initialValues[key];
+      });
+      formik.setValues(updated);
     }
-    //console.log("initial value ", initialValues);
+  }, [user.reqUser]);
 
-    return (
-        <div className="border rounded-md p-10 lg:px-40">
-            <div className="flex pb-7">
-                <div className="w-[15%]">
-                    <img className="w-8 h-8 rounded-full" src={imageFile || user.reqUser?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_7-ogoOaTH4Qxk9xEfPTPsY-w9AD4GRG_Cw&s"}
-                        alt="" />
-                </div>
+  async function handleImageChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
 
+    const url = await uploadToCloudinary(file);
+    setImageFile(url);
 
-                <div>
-                    <p>{user.reqUser?.username}</p>
-                    <p onClick={onOpen}
-                        className="font-bold text-blue-800 cursor-pointer">
-                        Change Profile Photo
-                    </p>
-                </div>
-            </div>
-            <form onSubmit={formik.handleSubmit}>
-                <Stack spacing="6">
-                    <FormControl className="flex" id="name">
-                        <FormLabel className="w-[15%]">Name</FormLabel>
-                        <div className="w-full">
-                            <Input placeholder="Name" className="w-full"
-                                type="text"
-                                {...formik.getFieldProps("name")}
-                            />
-                            <FormHelperText className="text-xs">
-                                Help people discover your account by using the name you're known
-                                by: either your full name, nickname, or business name.
-                            </FormHelperText>
-                            <FormHelperText className="text-xs">
-                                You can only change your name twice within 14 days.
-                            </FormHelperText>
-                        </div>
-                    </FormControl>
-
-                    <FormControl className="flex" id="username">
-                        <FormLabel className="w-[15%]">Username</FormLabel>
-                        <div className="w-full">
-                            <Input
-                                placeholder="Username"
-                                className="w-full"
-                                type="text"
-                                {...formik.getFieldProps("username")}
-                            />
-                            <FormHelperText className="text-xs">
-                                In most cases, you'll be able to change your username back to
-                                ashok.zarmariya for another 14 days. Learn more
-                            </FormHelperText>
-                        </div>
-                    </FormControl>
-                    <FormControl className="flex" id="website">
-                        <FormLabel className="w-[15%]">Website</FormLabel>
-                        <div className="w-full">
-                            <Input
-                                placeholder="website"
-                                className="w-full"
-                                type="text"
-                                {...formik.getFieldProps("website")} />
-                            <FormHelperText className="text-xs">
-                                Editing your links is only available on mobile. Visit the
-                                Instagram app and edit your profile to change the websites in
-                                your bio.
-                            </FormHelperText>
-                        </div>
-                    </FormControl>
-
-                    <FormControl className="flex" id="bio">
-                        <FormLabel className="w-[15%]">Bio</FormLabel>
-                        <div className="w-full">
-                            <Textarea
-                                placeholder="Bio"
-                                className="w-full"
-                                type="text"
-                                {...formik.getFieldProps("bio")} />
-                        </div>
-                    </FormControl>
-
-                    <div className="py-10">
-                        <p className="font-bold text-sm">Personal information</p>
-                        <p className="text-xs">
-                            Provide your personal information, even if the account is used for
-                            a business, a pet or something else. This won't be a part of your
-                            public profile.
-                        </p>
-                    </div>
-
-                    <FormControl className="flex" id="email">
-                        <FormLabel className="w-[15%]">Email address</FormLabel>
-                        <div className="w-full">
-                            <Input
-                                placeholder="Email"
-                                className="w-full"
-                                type="email"
-                                {...formik.getFieldProps("email")} />
-                        </div>
-                    </FormControl>
-
-                    <FormControl className="flex" id="mobile">
-                        <FormLabel className="w-[15%]">Phone number</FormLabel>
-                        <div className="w-full">
-                            <Input
-                                placeholder="Phone"
-                                className="w-full"
-                                type="tel"
-                                {...formik.getFieldProps("mobile")} />
-                        </div>
-                    </FormControl>
-                    <FormControl className="flex" id="gender">
-                        <FormLabel className="w-[15%]">Gender</FormLabel>
-                        <div className="w-full">
-                            <Input
-                                placeholder="Gender"
-                                className="w-full"
-                                type="text"
-                                {...formik.getFieldProps("gender")}
-                            />
-                        </div>
-                    </FormControl>
-                    {/* <FormControl className="flex id="private">
-<Checkbox {...formik.getFieldProps("private")}>
-Pr className="w-full"ivate Account
-</Checkbox>
-</FormControl> */}
-                    <div>
-                        <Button colorscheme="blue" type="submit" className="">
-                            submit
-                        </Button>
-                    </div>
-                </Stack>
-            </form>
-            <ChangeProfilePhotoModal
-                handleProfileImageChange={handleProfileImageChange}
-                isOpen={isOpen}
-                onClose={onClose}
-                onOpen={onOpen}
-            />
-        </div>
+    dispatch(
+      updateUserAction({
+        jwt: token,
+        data: { image: url, id: userId },
+      })
     );
+
+    onClose();
+  }
+
+  const avatar =
+    imageFile ||
+    user.reqUser?.image ||
+    "https://cdn-icons-png.flaticon.com/512/4140/4140048.png";
+
+  return (
+    <div className="min-h-screen relative overflow-hidden text-white px-4 py-10">
+
+      {/* 🌈 BACKGROUND */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute w-[500px] h-[500px] bg-pink-500/25 rounded-full blur-3xl animate-pulse top-[-120px] left-[-120px]" />
+        <div className="absolute w-[400px] h-[400px] bg-blue-500/25 rounded-full blur-3xl animate-pulse bottom-[-120px] right-[-120px]" />
+        <div className="absolute w-[300px] h-[300px] bg-purple-500/20 rounded-full blur-2xl animate-bounce top-[40%] left-[40%]" />
+      </div>
+
+      <div className="absolute inset-0 bg-black/60 -z-10" />
+
+      <div className="max-w-5xl mx-auto space-y-6 relative">
+
+        {/* HEADER */}
+        <div className="text-center">
+          <h1 className="text-3xl font-bold">Edit Profile</h1>
+          <p className="text-gray-300 text-sm mt-1">
+            Update your personal information
+          </p>
+        </div>
+
+        {/* PROFILE CARD */}
+        <div className="relative overflow-hidden rounded-[26px] border border-white/10 bg-white/10 backdrop-blur-xl p-6 flex items-center gap-6">
+
+          <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-blue-500/10" />
+
+          <div className="relative group cursor-pointer" onClick={onOpen}>
+            <img
+              src={avatar}
+              className="w-24 h-24 rounded-full object-cover border-4 border-pink-500"
+            />
+            <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs">
+              Change
+            </div>
+          </div>
+
+          <div className="relative">
+            <h2 className="text-xl font-semibold">
+              {formik.values.username || "username"}
+            </h2>
+            <p className="text-gray-300 text-sm">{formik.values.email}</p>
+            <p
+              className="text-pink-400 text-xs mt-1 cursor-pointer"
+              onClick={onOpen}
+            >
+              Edit Profile Picture
+            </p>
+          </div>
+        </div>
+
+        {/* FORM GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <Field label="Name">
+            <input {...inputClass} {...formik.getFieldProps("name")} />
+          </Field>
+
+          <Field label="Username">
+            <input {...inputClass} {...formik.getFieldProps("username")} />
+          </Field>
+
+          <Field label="Email">
+            <input {...inputClass} {...formik.getFieldProps("email")} />
+          </Field>
+
+          <Field label="Website">
+            <input {...inputClass} {...formik.getFieldProps("website")} />
+          </Field>
+
+          <Field label="Bio">
+            <textarea rows={3} {...inputClass} {...formik.getFieldProps("bio")} />
+          </Field>
+
+          <Field label="Gender">
+            <select {...inputClass} {...formik.getFieldProps("gender")}>
+              <option value="">Select</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </Field>
+
+        </div>
+
+        {/* PHONE */}
+        <div className="rounded-[24px] p-5 bg-white/10 border border-white/10 backdrop-blur-xl">
+          <p className="text-xs text-gray-300 mb-3">Phone Number</p>
+
+          <div className="flex gap-3">
+            <select className={inputClass.className} {...formik.getFieldProps("countryCode")}>
+              <option value="+91">+91 India</option>
+              <option value="+1">+1 USA</option>
+              <option value="+44">+44 UK</option>
+            </select>
+
+            <input
+              className={inputClass.className}
+              placeholder="Mobile number"
+              {...formik.getFieldProps("mobile")}
+            />
+          </div>
+        </div>
+
+        {/* PRIVATE */}
+        <div className="flex items-center gap-3 rounded-[24px] bg-white/10 border border-white/10 p-5 backdrop-blur-xl">
+          <input
+            type="checkbox"
+            checked={formik.values.private}
+            onChange={(e) =>
+              formik.setFieldValue("private", e.target.checked)
+            }
+          />
+          <span className="text-gray-200">Private Account</span>
+        </div>
+
+        {/* ACTION BUTTONS */}
+        <div className="flex gap-3">
+
+          {/* DISCARD */}
+          <button
+            onClick={() => navigate(-1)}
+            className="w-1/2 py-4 rounded-[24px] font-semibold
+            bg-white/10 border border-white/10 text-gray-200
+            hover:bg-white/20 transition"
+          >
+            Discard
+          </button>
+
+          {/* SAVE */}
+          <button
+            onClick={formik.handleSubmit}
+            className="w-1/2 py-4 rounded-[24px] font-bold text-white
+            bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500
+            shadow-lg shadow-pink-500/30 hover:scale-[1.02] transition"
+          >
+            Save Changes ✨
+          </button>
+
+        </div>
+
+      </div>
+
+      <ChangeProfilePhotoModal
+        handleProfileImageChange={handleImageChange}
+        isOpen={isOpen}
+        onClose={onClose}
+        onOpen={onOpen}
+      />
+    </div>
+  );
 };
+
 export default EditAccount;
+
+/* ---------------- FIELD ---------------- */
+const Field = ({ label, children }) => (
+  <div className="relative overflow-hidden rounded-[24px] p-4 bg-white/10 border border-white/10 backdrop-blur-xl">
+
+    <div className="absolute inset-0 bg-black/30" />
+
+    <div className="relative">
+      <p className="text-xs text-gray-300 mb-2">{label}</p>
+      {children}
+    </div>
+  </div>
+);
+
+/* ---------------- INPUT ---------------- */
+const inputClass = {
+  className:
+    "w-full bg-black/60 border border-white/10 rounded-xl p-3 outline-none text-white placeholder:text-gray-400",
+};
