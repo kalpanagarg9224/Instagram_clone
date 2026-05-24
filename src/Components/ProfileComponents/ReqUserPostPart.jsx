@@ -21,10 +21,10 @@ const ReqUserPostPart = ({ user }) => {
   const { post } = useSelector((store) => store);
 
   const tabs = [
-    { tab: "Post", icon: <AiOutlineTable /> },
-    { tab: "Reels", icon: <RiVideoAddLine /> },
+    { tab: "Drops", icon: <AiOutlineTable /> },
+    { tab: "VibeFeed", icon: <RiVideoAddLine /> },
     { tab: "Saved", icon: <BiBookmark /> },
-    { tab: "Tagged", icon: <AiOutlineUser /> },
+    { tab: "Collabs", icon: <AiOutlineUser /> },
   ];
 
   const handleTabClick = (tab, index) => {
@@ -96,7 +96,7 @@ const ReqUserPostPart = ({ user }) => {
       {/* POSTS */}
       <div className="flex flex-wrap">
 
-  {activeTab === "Post" && Array.isArray(post.userPost) &&
+  {activeTab === "Drops" && Array.isArray(post.userPost) &&
     post.userPost.length > 0 &&
     post.userPost.map((item) => (
       <ReqUserPostCard key={item.id} post={item} />
@@ -110,15 +110,15 @@ const ReqUserPostPart = ({ user }) => {
     ))
   }
 
-  {activeTab === "Reels" && (
+  {activeTab === "VibeFeed" && (
     <div className="w-full text-center text-gray-400 py-10">
-      No reels yet
+      No Feed yet
     </div>
   )}
 
-  {activeTab === "Tagged" && (
+  {activeTab === "Collabs" && (
     <div className="w-full text-center text-gray-400 py-10">
-      No tagged posts
+      No Collabs posts
     </div>
   )}
 

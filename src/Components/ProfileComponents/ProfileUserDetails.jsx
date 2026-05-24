@@ -72,7 +72,7 @@ export const ProfileUserDetails = ({
       {postCount}
     </span>
     <span className="text-gray-300 text-xs tracking-wide uppercase">
-      Posts
+      Drops
     </span>
   </div>
 
@@ -81,7 +81,7 @@ export const ProfileUserDetails = ({
       {user?.follower?.length || 0}
     </span>
     <span className="text-gray-300 text-xs tracking-wide uppercase">
-      Followers
+      Squad
     </span>
   </div>
 
@@ -90,7 +90,7 @@ export const ProfileUserDetails = ({
       {user?.following?.length || 0}
     </span>
     <span className="text-gray-300 text-xs tracking-wide uppercase">
-      Following
+      Crew
     </span>
   </div>
 
