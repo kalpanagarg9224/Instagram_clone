@@ -25,7 +25,7 @@ const HomeRight = () => {
     : suggestions.slice(0, 5);
 
   return (
-    <div className="relative text-white w-[400px] ml-auto pt-3 pb-3 pl-6 pr-6">
+      <div className="relative text-white w-[380px] ml-auto pt-3 pb-3 pl-3 pr-3">
 
       {/* BACKGROUND */}
       <div className="absolute inset-0 -z-10">

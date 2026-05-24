@@ -27,8 +27,8 @@ const MoreDropdown = ({ show }) => {
             <div className="relative p-4 flex items-center gap-3
                 hover:bg-white/10 cursor-pointer transition">
 
-                <FiSettings className="text-xl text-white/80" />
-                <p className="text-sm font-medium text-gray-200">Settings</p>
+                <FiSettings className="text-xl text-black/80" />
+                <p className="text-sm font-medium text-black text-gray-200">Settings</p>
             </div>
 
             <hr className="border-white/10" />
@@ -38,7 +38,7 @@ const MoreDropdown = ({ show }) => {
                 onClick={handleLogout}
                 className="relative p-4 flex items-center gap-3
                 hover:bg-red-500/10 cursor-pointer transition
-                text-red-400"
+                text-red-700"
             >
                 <FiLogOut className="text-xl" />
                 <p className="text-sm font-medium">Logout</p>

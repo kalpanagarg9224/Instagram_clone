@@ -49,7 +49,7 @@ const SearchComponents = () => {
             <SearchUserCard key={item.id || item.username} user={item} />
           ))
         ) : (
-          <p className="text-gray-400 text-sm">No users found</p>
+          <p className="text-gray-400 text-black text-sm">No users found</p>
         )}
       </div>
     </div>
