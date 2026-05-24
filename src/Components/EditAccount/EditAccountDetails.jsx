@@ -231,7 +231,7 @@ const EditAccount = () => {
             bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500
             shadow-lg shadow-pink-500/30 hover:scale-[1.02] transition"
           >
-            Save Changes ✨
+            Save
           </button>
 
         </div>

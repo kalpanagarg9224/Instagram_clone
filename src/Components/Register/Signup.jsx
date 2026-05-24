@@ -1,104 +1,173 @@
 import { Box, Button, FormControl, FormErrorMessage, Input, useToast } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import React, { useEffect }  from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { signupAction } from "../../Redux/Auth/Action";
 import { useDispatch, useSelector } from "react-redux";
-
-
+import { signupAction } from "../../Redux/Auth/Action";
+import VybeLogo from "../Brand/VybeLogo";
 
 const validationschema = Yup.object().shape({
     email: Yup.string().email("Invalid email address").required("Email is required"),
-    password: Yup.string().min(8,"Password must be t least 8 characters").required("Password is required"),
+    username: Yup.string().required("Username is required"),
+    name: Yup.string().required("Full name is required"),
+    password: Yup.string()
+        .min(8, "Password must be at least 8 characters")
+        .required("Password is required"),
 });
 
-const Signup = () =>{
-    const initialValues={email:"",username:"", name:"", password:""} 
-    const navigate = useNavigate();
-    const dispatch=useDispatch();
-    const {auth} = useSelector((store)=>store);
-    const toast = useToast();
+const Signup = () => {
+    const initialValues = { email: "", username: "", name: "", password: "" };
 
-    console.log("store signup : ",auth.signup);
-    const handleNavigate=()=>navigate("/login");
-    const handleSubmit = (values,actions)=>{
-        console.log("values: ",values);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const toast = useToast();
+    const { auth } = useSelector(store => store);
+
+    const handleSubmit = (values, actions) => {
         dispatch(signupAction(values));
         actions.setSubmitting(false);
-
     };
 
-    useEffect(()=>{
-        if(auth.signup?.username){
-        navigate("/login")
-        toast({
-            title: `Account created. ${auth.signup?.username}`,
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-        })
+    useEffect(() => {
+        if (auth.signup?.username) {
+            toast({
+                title: `Account created for ${auth.signup.username}`,
+                status: "success",
+                duration: 4000,
+                isClosable: true,
+            });
+
+            navigate("/login");
         }
-    },[auth.signup,navigate, toast])
+    }, [auth.signup, navigate, toast]);
+
+    const handleNavigate = () => navigate("/login");
 
     return (
-        <div> 
-            <div className="border">
-                            <Box p={8} display={'flex'} flexDirection={'column'} alignItems={'center'}>
-                            <img className="mb-5" src="https://i.imgur.com/zqpwkLQ.png" alt=""/>
-                            <Formik initialValues={initialValues} onSubmit = {handleSubmit} validationSchema={validationschema}>
-                                {(FormikProps) => <Form className="space-y-4">
-                                    <Field name="email">
-                                        {({field,form})=> <FormControl isInvalid={form.errors.email && form.touched.email}>
-                                            <Input className="w-full" {...field} id="email" placeholder="Mobile number or Email">
-                                            </Input>
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden text-white">
+
+            {/* BACKGROUND GLOW */}
+            <div className="absolute inset-0 bg-black">
+                <div className="absolute w-[500px] h-[500px] bg-pink-500/20 blur-3xl rounded-full top-[-120px] left-[-120px]" />
+                <div className="absolute w-[450px] h-[450px] bg-blue-500/20 blur-3xl rounded-full bottom-[-120px] right-[-120px]" />
+            </div>
+
+            {/* CARD */}
+            <div className="relative w-[400px] bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8">
+
+                {/* LOGO */}
+                <div className="flex justify-center mb-8">
+                    <VybeLogo />
+                </div>
+
+                {/* FORM */}
+                <Box>
+                    <Formik
+                        initialValues={initialValues}
+                        onSubmit={handleSubmit}
+                        validationSchema={validationschema}
+                    >
+                        {(FormikProps) => (
+                            <Form className="space-y-4">
+
+                                {/* EMAIL */}
+                                <Field name="email">
+                                    {({ field, form }) => (
+                                        <FormControl isInvalid={form.errors.email && form.touched.email}>
+                                            <Input
+                                                {...field}
+                                                placeholder="Email"
+                                                className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-400"
+                                            />
                                             <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                                         </FormControl>
-                                        }
-                                    </Field>
+                                    )}
+                                </Field>
 
-                                    <Field name="username">
-                                        {({field,form})=> <FormControl isInvalid={form.errors.username && form.touched.username}>
-                                            <Input className="w-full" {...field} id="username" placeholder="username">
-                                            </Input>
+                                {/* USERNAME */}
+                                <Field name="username">
+                                    {({ field, form }) => (
+                                        <FormControl isInvalid={form.errors.username && form.touched.username}>
+                                            <Input
+                                                {...field}
+                                                placeholder="Username"
+                                                className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-400"
+                                            />
                                             <FormErrorMessage>{form.errors.username}</FormErrorMessage>
                                         </FormControl>
-                                        }
-                                    </Field>
+                                    )}
+                                </Field>
 
-                                    <Field name="name">
-                                        {({field,form})=> <FormControl isInvalid={form.errors.name && form.touched.name}>
-                                            <Input className="w-full" {...field} id="name" placeholder="Full name">
-                                            </Input>
+                                {/* NAME */}
+                                <Field name="name">
+                                    {({ field, form }) => (
+                                        <FormControl isInvalid={form.errors.name && form.touched.name}>
+                                            <Input
+                                                {...field}
+                                                placeholder="Full Name"
+                                                className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-400"
+                                            />
                                             <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                                         </FormControl>
-                                        }
-                                    </Field>
-            
-                                    <Field name="password">
-                                        {({field,form})=> <FormControl isInvalid={form.errors.password && form.touched.password}>
-                                            <Input className="w-full" {...field} id="password" placeholder="Password">
-                                            </Input>
+                                    )}
+                                </Field>
+
+                                {/* PASSWORD */}
+                                <Field name="password">
+                                    {({ field, form }) => (
+                                        <FormControl isInvalid={form.errors.password && form.touched.password}>
+                                            <Input
+                                                {...field}
+                                                type="password"
+                                                placeholder="Password"
+                                                className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-400"
+                                            />
                                             <FormErrorMessage>{form.errors.password}</FormErrorMessage>
                                         </FormControl>
-                                        }
-                                    </Field>
-            
-                                    <p className="text-center text-sm">People who use our service may have uploaded your contact information to Instagram. Learn more .</p>
-                                    <p className="text-center text-sm">By tapping Submit, you agree to create an account and to Instagram's Terms, Privacy Policy and Cookies policy.</p>
-                                    <Button className="w-full" mt={8} colorScheme="blue" type="submit" isLoading={FormikProps.isSubmitting}>
-                                        Sign Up
-                                    </Button>
-            
-                                    </Form>}
-                            </Formik>
-                            </Box>
-                        </div>
-                        <div className="border w-full border-slate-300 mt-5">
-                            <p className="text-center py-2 text-sm">If you alreay have an Account <span onClick={handleNavigate} className="ml-2 text-blue-700 cursor-pointer">Sign In</span></p>
-                        </div>
+                                    )}
+                                </Field>
+
+                                {/* INFO TEXT */}
+                                <p className="text-center text-xs text-gray-400">
+                                    People who use our service may have uploaded your contact information.
+                                </p>
+
+                                <p className="text-center text-xs text-gray-400">
+                                    By signing up, you agree to our Terms, Privacy Policy and Cookies policy.
+                                </p>
+
+                                {/* BUTTON */}
+                                <Button
+                                    className="w-full"
+                                    mt={6}
+                                    colorScheme="blue"
+                                    type="submit"
+                                    isLoading={FormikProps.isSubmitting}
+                                >
+                                    Sign Up
+                                </Button>
+
+                            </Form>
+                        )}
+                    </Formik>
+                </Box>
+
+            </div>
+
+            {/* FOOTER */}
+            <div className="absolute bottom-10 text-sm text-gray-400">
+                Already have an account?
+                <span
+                    onClick={handleNavigate}
+                    className="ml-2 text-blue-400 cursor-pointer hover:underline"
+                >
+                    Sign In
+                </span>
+            </div>
+
         </div>
-    )
-}
+    );
+};
 
 export default Signup;

@@ -7,46 +7,44 @@ const MoreDropdown = ({ show }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-
-    localStorage.clear();
-
-    navigate("/login");
-
-    window.location.reload();
-
-};
+        localStorage.clear();
+        navigate("/login");
+        window.location.reload();
+    };
 
     if (!show) return null;
 
     return (
+        <div className="absolute bottom-16 left-4 w-60 z-50 overflow-hidden
+            rounded-2xl border border-white/10
+            bg-white/10 backdrop-blur-xl
+            shadow-2xl text-white">
 
-        <div className='absolute bottom-16 left-4 bg-white shadow-xl rounded-2xl w-60 border z-50 overflow-hidden'>
+            {/* 🌈 subtle gradient overlay like EditAccount */}
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-blue-500/10" />
 
-            <div className='p-4 hover:bg-gray-100 cursor-pointer flex items-center space-x-3'>
+            {/* SETTINGS */}
+            <div className="relative p-4 flex items-center gap-3
+                hover:bg-white/10 cursor-pointer transition">
 
-                <FiSettings className='text-xl'/>
-
-                <p>Settings</p>
-
+                <FiSettings className="text-xl text-white/80" />
+                <p className="text-sm font-medium text-gray-200">Settings</p>
             </div>
 
-            <hr/>
+            <hr className="border-white/10" />
 
+            {/* LOGOUT */}
             <div
                 onClick={handleLogout}
-                className='p-4 hover:bg-red-50 text-red-500 cursor-pointer flex items-center space-x-3'
+                className="relative p-4 flex items-center gap-3
+                hover:bg-red-500/10 cursor-pointer transition
+                text-red-400"
             >
-
-                <FiLogOut className='text-xl'/>
-
-                <p>Logout</p>
-
+                <FiLogOut className="text-xl" />
+                <p className="text-sm font-medium">Logout</p>
             </div>
-
         </div>
-
     );
-
 };
 
 export default MoreDropdown;

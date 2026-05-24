@@ -1,120 +1,131 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from "react";
 import { RiVideoAddLine } from "react-icons/ri";
 import { AiOutlineTable, AiOutlineUser } from "react-icons/ai";
 import { BiBookmark } from "react-icons/bi";
-import ReqUserPostCard from './ReqUserPostCard';
-import "./ReqUserPostCard.css"
-import { useDispatch, useSelector } from 'react-redux';
-import { reqUserPostAction } from '../../Redux/Post/Action';
+import ReqUserPostCard from "./ReqUserPostCard";
+import { useDispatch, useSelector } from "react-redux";
+import { reqUserPostAction } from "../../Redux/Post/Action";
 
 const ReqUserPostPart = ({ user }) => {
+  const [activeTab, setActiveTab] = useState("Post");
 
-    const [activeTab, setActiveTab] = useState("Post");
+  const [indicator, setIndicator] = useState({
+    left: 0,
+    width: 0,
+  });
 
-    const dispatch = useDispatch();
+  const tabsRef = useRef([]);
 
-    const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
+  const { post } = useSelector((store) => store);
 
-    const { post } = useSelector(store => store);
+  const tabs = [
+    { tab: "Post", icon: <AiOutlineTable /> },
+    { tab: "Reels", icon: <RiVideoAddLine /> },
+    { tab: "Saved", icon: <BiBookmark /> },
+    { tab: "Tagged", icon: <AiOutlineUser /> },
+  ];
 
-    const tabs = [
-        {
-            tab: "Post",
-            icon: <AiOutlineTable />
-        },
-        {
-            tab: "Reels",
-            icon: <RiVideoAddLine />
-        },
-        {
-            tab: "Saved",
-            icon: <BiBookmark />
-        },
-        {
-            tab: "Tagged",
-            icon: <AiOutlineUser />
-        },
-    ]
+  const handleTabClick = (tab, index) => {
+    setActiveTab(tab);
 
-    useEffect(() => {
+    const el = tabsRef.current[index];
+    if (!el) return;
 
-        if (user?.id) {
+    setIndicator({
+      left: el.offsetLeft,
+      width: el.offsetWidth,
+    });
+  };
 
-            dispatch(
-                reqUserPostAction({
-                    jwt: token,
-                    userId: user.id
-                })
-            );
-        }
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(
+        reqUserPostAction({
+          jwt: token,
+          userId: user.id,
+        })
+      );
+    }
+  }, [user?.id, post.createdPost]);
 
-    }, [user?.id, post.createdPost]);
+  useEffect(() => {
+  const index = tabs.findIndex((t) => t.tab === activeTab);
+  const el = tabsRef.current[index];
 
-    return (
+  if (el) {
+    setIndicator({
+      left: el.offsetLeft,
+      width: el.offsetWidth,
+    });
+  }
+}, []);
 
-        <div>
+  return (
+    <div>
 
-            <div className='flex space-x-14 border-t relative'>
+      {/* TABS */}
+      <div className="flex space-x-14 border-t relative">
 
-                {
-                    tabs.map((item) => (
+        {/* underline */}
+        <span
+          className="absolute top-0 h-[2px] bg-pink-500 transition-all duration-300 ease-out"
+          style={{
+            left: indicator.left,
+            width: indicator.width,
+          }}
+        />
 
-                        <div
-                            key={item.tab}
-                            onClick={() => setActiveTab(item.tab)}
-                            className={`
-                                ${activeTab === item.tab
-                                    ? "border-t border-black"
-                                    : "opacity-60"
-                                }
-                                flex items-center cursor-pointer py-2 text-sm
-                            `}
-                        >
+        {tabs.map((item, index) => (
+          <div
+            key={item.tab}
+            ref={(el) => (tabsRef.current[index] = el)}
+            onClick={() => handleTabClick(item.tab, index)}
+            className={`
+              flex items-center cursor-pointer py-2 text-sm transition-colors duration-300
+              ${activeTab === item.tab ? "text-white" : "opacity-60"}
+            `}
+          >
+            <p>{item.icon}</p>
+            <p className="ml-1">{item.tab}</p>
+          </div>
+        ))}
+      </div>
 
-                            <p>{item.icon}</p>
+      {/* POSTS */}
+      <div className="flex flex-wrap">
 
-                            <p className='ml-1'>
-                                {item.tab}
-                            </p>
+  {activeTab === "Post" && Array.isArray(post.userPost) &&
+    post.userPost.length > 0 &&
+    post.userPost.map((item) => (
+      <ReqUserPostCard key={item.id} post={item} />
+    ))
+  }
 
-                        </div>
-                    ))
-                }
+  {activeTab === "Saved" && Array.isArray(user?.savedPost) &&
+    user.savedPost.length > 0 &&
+    user.savedPost.map((item) => (
+      <ReqUserPostCard key={item.id} post={item} />
+    ))
+  }
 
-            </div>
+  {activeTab === "Reels" && (
+    <div className="w-full text-center text-gray-400 py-10">
+      No reels yet
+    </div>
+  )}
 
-            <div>
+  {activeTab === "Tagged" && (
+    <div className="w-full text-center text-gray-400 py-10">
+      No tagged posts
+    </div>
+  )}
 
-                <div className='flex flex-wrap'>
+</div>
 
-                    {
-                        activeTab === "Post"
-                            ? (
-                                Array.isArray(post.userPost) &&
-                                post.userPost.map((item) => (
-                                    <ReqUserPostCard
-                                        key={item.id}
-                                        post={item}
-                                    />
-                                ))
-                            )
-                            : (
-                                Array.isArray(user?.savedPost) &&
-                                user.savedPost.map((item) => (
-                                    <ReqUserPostCard
-                                        key={item.id}
-                                        post={item}
-                                    />
-                                ))
-                            )
-                    }
-
-                </div>
-
-            </div>
-
-        </div>
-    );
+    </div>
+  );
 };
 
 export default ReqUserPostPart;
