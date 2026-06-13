@@ -33,7 +33,7 @@ export const isFollowing=(reqUser, user2)=>{
 }
 
 export const isReqUser=(userId1, userId2)=>{
-    if(userId1 && userId2) return userId1==userId2;
+    if(userId1 && userId2) return userId1===userId2;
 }
 
 export const timeDifference=(timestamp)=>{
@@ -49,18 +49,18 @@ export const timeDifference=(timestamp)=>{
     const weeks = Math.floor(days/7);
 
     if(weeks>0){
-        return weeks+ " week" + (weeks==1?"":"s") + " ago";
+        return weeks+ " week" + (weeks===1?"":"s") + " ago";
     }
     else if(days>0){
-        return days+ " day" + (days==1?"":"s") + " ago";
+        return days+ " day" + (days===1?"":"s") + " ago";
     }
     else if(hours>0){
-        return hours+ " hour" + (hours==1?"":"s") + " ago";
+        return hours+ " hour" + (hours===1?"":"s") + " ago";
     }
     else if(minutes>0){
-        return minutes+ " minute" + (minutes==1?"":"s") + " ago";
+        return minutes+ " minute" + (minutes===1?"":"s") + " ago";
     }
     else if(seconds>0){
-        return seconds+ " second" + (seconds==1?"":"s") + " ago";
+        return seconds+ " second" + (seconds===1?"":"s") + " ago";
     }
 }

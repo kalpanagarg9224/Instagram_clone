@@ -3,7 +3,6 @@ import {AiFillHeart , AiOutlineHeart} from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { isCommentLikedByUser, timeDifference } from '../../Config/Logic';
 import { likeCommentAction, unlikeCommentAction } from '../../Redux/Comment/Action';
-import { isCSSVariableName } from 'framer-motion';
 
 const CommentCard = ({comment}) => {
     const [isCommentLike, setIsCommentLike] = useState(false);

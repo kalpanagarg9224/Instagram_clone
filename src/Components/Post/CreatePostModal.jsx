@@ -161,6 +161,7 @@ const CreatePostModal = ({ onClose, isOpen }) => {
                     <img
                       src={URL.createObjectURL(file)}
                       className="rounded-2xl max-h-full object-cover"
+                      alt=""
                     />
                   ) : (
                     <video

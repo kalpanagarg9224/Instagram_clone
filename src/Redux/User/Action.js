@@ -1,6 +1,4 @@
-import { type } from "@testing-library/user-event/dist/type"
-import { data } from "react-router-dom"
-import {FOLLOW_USER, GET_USER_BY_USERNAME, GET_USERS_BY_USER_IDS, POPULAR_USER, REQ_USER, SEARCH_USER, UNFOLLOW_USER, UPDATE_USER} from "./ActionType";
+import {GET_USER_BY_USERNAME, GET_USERS_BY_USER_IDS, POPULAR_USER, REQ_USER, SEARCH_USER, UPDATE_USER} from "./ActionType";
 const BASE_API = "http://localhost:5454/api"
 
 export const getUserProfileAction=(jwt)=>async(dispatch)=>{

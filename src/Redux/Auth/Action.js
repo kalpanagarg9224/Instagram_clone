@@ -1,4 +1,3 @@
-import { type } from "@testing-library/user-event/dist/type";
 import { SIGN_IN, SIGN_UP } from "./ActioType";
 
 

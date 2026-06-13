@@ -35,6 +35,7 @@ const SuggestionCard = ({ user }) => {
         <img
           src={user?.image || defaultImage}
           className="w-8 h-8 rounded-full object-cover border border-white/20"
+          alt=""
         />
 
         <div className="ml-2">

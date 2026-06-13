@@ -1,4 +1,4 @@
-import {Modal, ModalBody, ModalOverlay, ModalContent,ModalHeader,ModalCloseButton} from '@chakra-ui/react';
+import {Modal, ModalBody, ModalOverlay, ModalContent,} from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
 import CommentCard from './CommentCard';
 import { FaRegComment } from 'react-icons/fa';
@@ -8,7 +8,7 @@ import { BsBookmark, BsBookmarkFill, BsEmojiSmile, BsThreeDots } from 'react-ico
 import "./CommentModal.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { createCommentAction, findPostCommentAction } from "../../Redux/Comment/Action"
+import { createCommentAction } from "../../Redux/Comment/Action"
 import { findPostByIdAction } from '../../Redux/Post/Action';
 import { timeDifference } from '../../Config/Logic';
 

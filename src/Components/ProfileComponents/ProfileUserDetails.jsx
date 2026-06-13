@@ -1,7 +1,6 @@
 import React from "react";
 import { FiSettings } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import AddStory from "../Story/AddStory";
 
 export const ProfileUserDetails = ({
   user,

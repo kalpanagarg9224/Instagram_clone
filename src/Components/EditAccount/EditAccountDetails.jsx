@@ -126,6 +126,7 @@ const EditAccount = () => {
             <img
               src={avatar}
               className="w-24 h-24 rounded-full object-cover border-4 border-pink-500"
+              alt=""
             />
             <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs">
               Change
