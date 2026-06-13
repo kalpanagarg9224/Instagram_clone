@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import StoryCircle from '../../Components/Story/StoryCircle';
 import HomeRight from '../../Components/HomeRight/HomeRight';
 import PostCard from '../../Components/Post/PostCard';
-import { useDisclosure } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { findUserPostAction } from '../../Redux/Post/Action';
 import { getPopularUser } from '../../Redux/User/Action';
@@ -13,7 +12,6 @@ import { createStoryAction } from '../../Redux/Story/Action';
 
 const HomePage = () => {
 
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const [userIds, setUserIds] = useState();
     const token = localStorage.getItem("token");
 
@@ -25,11 +23,9 @@ const HomePage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-
-        console.log("FETCHING STORIES");
-        dispatch(fetchFollowingStoryAction(token));
-
-    }, []);
+  console.log("FETCHING STORIES");
+  dispatch(fetchFollowingStoryAction(token));
+}, [dispatch, token]);
 
     useEffect(() => {
 
@@ -43,18 +39,23 @@ const HomePage = () => {
     }, [user.reqUser]);
 
     useEffect(() => {
+  if (!userIds || userIds.length === 0) return;
 
-        if (!userIds || userIds.length === 0) return;
+  const data = {
+    jwt: token,
+    userIds: userIds.join(","),
+  };
 
-        const data = {
-            jwt: token,
-            userIds: userIds.join(",")
-        };
+  dispatch(findUserPostAction(data));
+  dispatch(getPopularUser(token));
 
-        dispatch(findUserPostAction(data));
-        dispatch(getPopularUser(token));
-
-    }, [userIds, post.createdPost, post.deletedPost]);
+}, [
+  userIds,
+  post.createdPost,
+  post.deletedPost,
+  dispatch,
+  token,
+]);
 
     useEffect(() => {
 

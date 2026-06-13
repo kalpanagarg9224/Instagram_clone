@@ -25,12 +25,12 @@ const user = useSelector(store => store.user);
 
   // console.log("post  ", post);
 
-  useEffect(()=>{
-    const data = {jwt:token, postId:postId}
-    if(postId){
+  useEffect(() => {
+  const data = { jwt: token, postId };
+  if (postId) {
     dispatch(findPostByIdAction(data));
-    }
-  },[comment.createdComment, postId]);
+  }
+}, [comment.createdComment, postId, dispatch, token]);
 
   return (
     <div>

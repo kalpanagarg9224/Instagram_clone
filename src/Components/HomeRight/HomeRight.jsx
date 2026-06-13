@@ -12,8 +12,10 @@ const HomeRight = () => {
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    if (token) dispatch(getPopularUser(token));
-  }, []);
+  if (token) {
+    dispatch(getPopularUser(token));
+  }
+}, [dispatch, token]);
 
   const suggestions =
     Array.isArray(user.popularUsers)

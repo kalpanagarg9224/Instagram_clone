@@ -40,15 +40,15 @@ const ReqUserPostPart = ({ user }) => {
   };
 
   useEffect(() => {
-    if (user?.id) {
-      dispatch(
-        reqUserPostAction({
-          jwt: token,
-          userId: user.id,
-        })
-      );
-    }
-  }, [user?.id, post.createdPost]);
+  if (user?.id) {
+    dispatch(
+      reqUserPostAction({
+        jwt: token,
+        userId: user.id,
+      })
+    );
+  }
+}, [user?.id, post.createdPost, dispatch, token]);
 
   useEffect(() => {
   const index = tabs.findIndex((t) => t.tab === activeTab);
@@ -60,7 +60,7 @@ const ReqUserPostPart = ({ user }) => {
       width: el.offsetWidth,
     });
   }
-}, []);
+}, [activeTab]);
 
   return (
     <div>

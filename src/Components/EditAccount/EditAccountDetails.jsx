@@ -37,8 +37,8 @@ const EditAccount = () => {
   };
 
   useEffect(() => {
-    dispatch(getUserProfileAction(token));
-  }, []);
+  dispatch(getUserProfileAction(token));
+}, [dispatch, token]);
 
   const formik = useFormik({
     initialValues,
@@ -63,15 +63,16 @@ const EditAccount = () => {
     },
   });
 
-  useEffect(() => {
-    if (user.reqUser) {
-      const updated = {};
-      Object.keys(initialValues).forEach((key) => {
-        updated[key] = user.reqUser[key] ?? initialValues[key];
-      });
-      formik.setValues(updated);
-    }
-  }, [user.reqUser]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+  if (user.reqUser) {
+    const updated = {};
+    Object.keys(initialValues).forEach((key) => {
+      updated[key] = user.reqUser[key] ?? initialValues[key];
+    });
+    formik.setValues(updated);
+  }
+}, [user.reqUser]);
 
   async function handleImageChange(e) {
     const file = e.target.files[0];

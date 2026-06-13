@@ -28,14 +28,14 @@ const Profile = () => {
   );
 
   useEffect(() => {
-    dispatch(getUserProfileAction(token));
-    dispatch(
-      findUserByUserNameAction({
-        jwt: token,
-        username,
-      })
-    );
-  }, [username]);
+  dispatch(getUserProfileAction(token));
+  dispatch(
+    findUserByUserNameAction({
+      jwt: token,
+      username,
+    })
+  );
+}, [dispatch, token, username]);
 
   return (
     <div className="min-h-screen relative text-white px-6 py-10 overflow-hidden">
