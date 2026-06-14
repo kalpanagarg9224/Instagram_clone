@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const MoreDropdown = ({ show }) => {
 
-    const navigate = useNavigate();
-
     const handleLogout = () => {
         // 1. Wipe the JWT token and all auth data instantly
         localStorage.clear();
