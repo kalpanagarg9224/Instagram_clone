@@ -7,9 +7,10 @@ const MoreDropdown = ({ show }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        // 1. Wipe the JWT token and all auth data instantly
         localStorage.clear();
-        navigate("/login");
-        window.location.reload();
+        // 2. Force a clean, hard redirect straight to login (performs reload automatically)
+        window.location.href = "/login";
     };
 
     if (!show) return null;
