@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { reqUserPostAction } from "../../Redux/Post/Action";
 
 const ReqUserPostPart = ({ user }) => {
-  const [activeTab, setActiveTab] = useState("Post");
+  const [activeTab, setActiveTab] = useState("Drops");
 
   const [indicator, setIndicator] = useState({
     left: 0,

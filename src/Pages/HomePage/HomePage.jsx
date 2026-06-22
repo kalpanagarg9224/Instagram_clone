@@ -23,9 +23,9 @@ const HomePage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-  console.log("FETCHING STORIES");
-  dispatch(fetchFollowingStoryAction(token));
-}, [dispatch, token]);
+        console.log("FETCHING STORIES");
+        dispatch(fetchFollowingStoryAction(token));
+    }, [dispatch, token]);
 
     useEffect(() => {
 
@@ -37,25 +37,27 @@ const HomePage = () => {
         setUserIds([user.reqUser.id, ...newIds]);
 
     }, [user.reqUser]);
-
     useEffect(() => {
-  if (!userIds || userIds.length === 0) return;
+        if (token) {
+            dispatch(getPopularUser(token));
+        }
+    }, [dispatch, token]);
+    useEffect(() => {
+        if (!userIds || userIds.length === 0 || !token) return;
 
-  const data = {
-    jwt: token,
-    userIds: userIds.join(","),
-  };
+        const data = {
+            jwt: token,
+            userIds: userIds.join(","),
+        };
 
-  dispatch(findUserPostAction(data));
-  dispatch(getPopularUser(token));
-
-}, [
-  userIds,
-  post.createdPost,
-  post.deletedPost,
-  dispatch,
-  token,
-]);
+        dispatch(findUserPostAction(data));
+    }, [
+        userIds,
+        post.createdPost,
+        post.deletedPost,
+        dispatch,
+        token,
+    ]);
 
     useEffect(() => {
 
@@ -179,7 +181,7 @@ const HomePage = () => {
                 </div>
 
                 {/* RIGHT SECTION */}
-                    <div className='w-[37%]'>
+                <div className='w-[37%]'>
 
                     <div
                         className='

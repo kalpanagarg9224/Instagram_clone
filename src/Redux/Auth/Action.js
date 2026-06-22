@@ -1,10 +1,10 @@
-import { SIGN_IN, SIGN_UP } from "./ActioType";
-
+import { SIGN_IN, SIGN_UP } from "./ActionType";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const signinAction=(data)=>async (dispatch)=>{
     try {
-        const res = await fetch("http://localhost:5454/signin", {
-            method:"GET",
+        const res = await fetch(`${API_URL}/signin`,{
+            method:"POST",
             headers:{
                 // "Content-Type":"application/json",
                 Authorization:"Basic "+btoa(data.email + ":" + data.password),
@@ -21,7 +21,7 @@ export const signinAction=(data)=>async (dispatch)=>{
 
 export const signupAction=(data)=>async (dispatch)=>{
     try {
-        const res = await fetch("http://localhost:5454/signup", {
+        const res = await fetch(`${API_URL}/signup`, {
             method: "POST",
             headers:{
                 "Content-Type":"application/json",
