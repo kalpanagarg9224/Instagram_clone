@@ -1,40 +1,78 @@
+/* Root App Container */
 .App {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
   text-align: center;
 }
 
+/* Logo */
 .App-logo {
-  height: 40vmin;
+  height: min(40vmin, 220px);
+  max-width: 100%;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin 20s linear infinite;
   }
 }
 
+/* Default CRA Header */
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
+  width: 100%;
+  background-color: #282c34;
+
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+
+  padding: 1rem;
+  box-sizing: border-box;
+
+  font-size: clamp(1rem, 2vmin + 0.5rem, 2rem);
   color: white;
 }
 
 .App-link {
   color: #61dafb;
+  word-break: break-word;
 }
 
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
+/* Global Responsive Helpers */
 
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

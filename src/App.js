@@ -4,13 +4,10 @@ import { useDispatch } from "react-redux";
 import { getUserProfileAction } from "./Redux/User/Action";
 
 function App() {
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-      // console.log("TOKEN:", token);
-
 
     if (token) {
       dispatch(getUserProfileAction(token));
@@ -18,8 +15,8 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="App">
-      <Router/>
+    <div className="App min-h-screen w-full overflow-x-hidden">
+      <Router />
     </div>
   );
 }
