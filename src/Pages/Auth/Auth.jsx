@@ -25,7 +25,7 @@ export const Auth = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-[40vw] lg:w-[25vw]">
+                <div className="w-full max-w-md">
                     {location.pathname==="/login" ? <Signin/> : <Signup/>}
                 </div>
             </div>
